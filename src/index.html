@@ -1,0 +1,60 @@
+<html>
+
+<head>        
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="./js/app.js"></script> 
+    <!-- <script src="https://wzrd.in/standalone/buffer"></script>    -->
+</head>
+
+<body>
+    <div id='container'>
+        <header>
+            <h1> Ethereum and IPFS Ðapp</h1>
+        </header>
+
+        <hr />
+        <Grid>
+            <h3> Choose file to send to IPFS </h3>
+            <Form>
+                <input type="file" onchange="App.captureFile(this)" accept="image/*" />
+                <Button bsStyle="primary" type="button" onclick="App.onSubmit(this)">Send it</Button>
+            </Form>
+            <hr />
+            <!-- <Button onClick=""> Get Transaction Receipt </Button> -->
+            <!-- <Table bordered responsive>
+                <thead>
+                    <tr>
+                        <th>Tx Receipt Category</th>
+                        <th>Values</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>IPFS Hash # stored on Eth Contract</td>
+                        <td>{this.state.ipfsHash}</td>
+                    </tr>
+                    <tr>
+                        <td>Ethereum Contract Address</td>
+                        <td>{this.state.ethAddress}</td>
+                    </tr>
+                    <tr>
+                        <td>Tx Hash # </td>
+                        <td>{this.state.transactionHash}</td>
+                    </tr>
+                    <tr>
+                        <td>Block Number # </td>
+                        <td>{this.state.blockNumber}</td>
+                    </tr>
+                    <tr>
+                        <td>Gas Used</td>
+                        <td>{this.state.gasUsed}</td>
+                    </tr>
+
+                </tbody>
+            </Table> -->
+        </Grid>
+    </div>
+</body>
+
+</html>
