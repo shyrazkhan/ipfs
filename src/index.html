@@ -1,9 +1,40 @@
 <html>
-<head>        
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="./js/app.js"></script> 
+<head>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script> -->
+    <script src="./js/app.js"></script>
     <!-- <script src="https://wzrd.in/standalone/buffer"></script>    -->
 </head>
+<style>
+.loader {
+    
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -32px;
+  margin-top: -32px;  
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
 <body>
     <div id='container'>
         <header>
@@ -14,43 +45,39 @@
             <h3> Choose file to send to IPFS </h3>
             <Form>
                 <input type="file" onchange="App.captureFile(this)" accept="image/*" />
-                <Button bsStyle="primary" type="button" onclick="App.onSubmit(this)">Send it</Button>
+                <Button id="btn-submit" bsStyle="primary" type="button" onclick="App.onSubmit(this)">Upload</Button>
             </Form>
             <hr />
+            <h3>Connection Information</h3>
+            <div id="connection-error" style="display: none; color: red">Please check your Meta mask isn't working.</div>
+            <div id="connection-container">
+                <p class="text-connected-client-label"><span>Connected Client: </span><span class="text-connected-client">Metamask</span></p>
+                <p class="text-connected-network-label"><span>Connected Network: </span><span class="text-connected-network">Rinkeby</span></p>
+                <p class="text-connected-address-label"><span>Connected Address: </span><span class="text-connected-address">0x000</span>
+                </p>
+            </div>
+            <div id="loading" class="loader" style="display: none" ></div>
+
             <!-- <Button onClick=""> Get Transaction Receipt </Button> -->
+            <!-- <ul id="file-list">
+            </ul> -->
             <!-- <Table bordered responsive>
                 <thead>
                     <tr>
-                        <th>Tx Receipt Category</th>
-                        <th>Values</th>
+                        <th>File Names</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     <tr>
-                        <td>IPFS Hash # stored on Eth Contract</td>
-                        <td>{this.state.ipfsHash}</td>
+                        <td>file1</td>
                     </tr>
                     <tr>
-                        <td>Ethereum Contract Address</td>
-                        <td>{this.state.ethAddress}</td>
+                        <td>file2</td>
                     </tr>
-                    <tr>
-                        <td>Tx Hash # </td>
-                        <td>{this.state.transactionHash}</td>
-                    </tr>
-                    <tr>
-                        <td>Block Number # </td>
-                        <td>{this.state.blockNumber}</td>
-                    </tr>
-                    <tr>
-                        <td>Gas Used</td>
-                        <td>{this.state.gasUsed}</td>
-                    </tr>
-
                 </tbody>
             </Table> -->
         </Grid>
     </div>
 </body>
+
 </html>

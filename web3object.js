@@ -1,4 +1,10 @@
 let Web3 = require('web3');
+var path = require('path');
+var contractJson = require(path.join(__dirname,'contract/FileContract.json')); 
+var contract = require('truffle-contract');
+var HDWalletProvider = require("truffle-hdwallet-provider-privkey");
+const privKeys = ["63C9452D5ED218CC3A8E43E08026FADEA014E750713A0FA1B1B57BE169A2BFC3"]; // private keys
+var hdProvider = new HDWalletProvider(privKeys, "https://rinkeby.infura.io/v3/621a72e45c4a4ac4a1047b82e4b29b3c")
 
 //ganache url path
 // let url_ganache = "http://127.0.0.1:7545";
@@ -10,8 +16,13 @@ let Web3 = require('web3');
 // //     console.log(balanceEther);
 // // });
 
+// Mainnet setting
+// let url_infura = "https://mainnet.infura.io/v3/621a72e45c4a4ac4a1047b82e4b29b3c";
+// let provider = new Web3.providers.HttpProvider(url_infura);
+// let web3 = new Web3(provider);
 
-let url_infura = "https://mainnet.infura.io/v3/621a72e45c4a4ac4a1047b82e4b29b3c";
+// Rinkeby setting
+let url_infura = "https://rinkeby.infura.io/v3/621a72e45c4a4ac4a1047b82e4b29b3c";
 let provider = new Web3.providers.HttpProvider(url_infura);
 let web3 = new Web3(provider);
 
@@ -40,11 +51,41 @@ console.log(version); // "0.2.0"
 // })
 
 
-var fileName = web3.utils.padRight(web3.utils.fromAscii('dapp'), 34);
+var fileName = web3.utils.padRight(web3.utils.fromAscii('dapp'));
 console.log(fileName);
 
-var fileHash = web3.utils.padRight(web3.utils.fromAscii('dapphash'), 34);
+var fileHash = web3.utils.padRight(web3.utils.fromAscii('QmU3Hmy6GcYEQCcHvydwbhVHMbdP6pUDtHjUqRcgf4BxNa'));
 console.log(fileHash);
+web3.eth.net.getNetworkType(function(err,res){console.log(res)})
+
+//(async () => {
+
+    var fileContract = contract(contractJson);
+    fileContract.setProvider(provider);
+    //var instance = await fileContract.deployed();
+    if (typeof fileContract.currentProvider.sendAsync !== "function") {
+        fileContract.currentProvider.sendAsync = function() {
+          return fileContract.currentProvider.send.apply(fileContract.currentProvider, arguments);
+        };
+    };
+
+    fileContract.deployed().then(function(instance){
+        console.log(instance.address);
+    });    
+
+    // var cc = new web3.eth.Contract(contractJson, '0xE349A6A40322a28163C7eBC04F50B32EBBD29Cb4');
+    // console.log(cc);
+
+    
+
+
+
+    //console.log(instance.address);
+//})();
+
+
+
+
 
 
 
