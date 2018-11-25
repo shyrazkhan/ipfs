@@ -49,9 +49,28 @@ App = {
                 });
 
                 web3.eth.getAccounts((err, accts) => {
+                    debugger;
                     selectedAddress = accts[0];
                     account = accts[0];
                     $('.text-connected-address').text(selectedAddress);
+                    debugger;
+
+                    console.log(JSON.stringify(account));
+                    ///getfiles                    
+                    $.ajax({
+                        type: 'GET',
+                        async: false,                        
+                        url: "http://localhost:3000/getfiles",
+                        data: { 'address': account },                        
+                        success: function (result) { 
+                            debugger;
+                            console.log(result);
+                        },
+                        error: function (err) {
+                            $('#loading').hide();                    
+                            console.log(err);
+                        }
+                    });
                 });
 
                 $('.text-connected-client').text("Meta Mask");
@@ -100,6 +119,7 @@ App = {
                 contentType: false, //'multipart/form-data',
                 success: function (result) {                    
                     $('#loading').hide();
+                    $('.message').text().show();
                     console.log(result);
                     alert('File has been uploaded to blockchain...');
                 },

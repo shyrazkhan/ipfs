@@ -6,12 +6,19 @@ var contractJson = require(path.join(__dirname, 'contract/FileContract.json'))
 const IPFS = require('ipfs-api');
 const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 var url_infura = "https://rinkeby.infura.io/v3/621a72e45c4a4ac4a1047b82e4b29b3c";
-var provider = new Web3.providers.HttpProvider(url_infura);
+// var provider = new Web3.providers.HttpProvider(url_infura);
 
 var HDWalletProvider = require("truffle-hdwallet-provider-privkey");
 const privKeys = ["63C9452D5ED218CC3A8E43E08026FADEA014E750713A0FA1B1B57BE169A2BFC3"]; // private keys
 var hdProvider = new HDWalletProvider(privKeys, "https://rinkeby.infura.io/v3/621a72e45c4a4ac4a1047b82e4b29b3c")
 
+var fileContract = contract(contractJson);
+fileContract.setProvider(hdProvider);
+if (typeof fileContract.currentProvider.sendAsync !== "function") {
+    fileContract.currentProvider.sendAsync = function () {
+        return fileContract.currentProvider.send.apply(fileContract.currentProvider, arguments);
+    };
+};
 
 var self = {
     uploadFile: function (req, res) {
@@ -50,25 +57,35 @@ var self = {
 
     addToSmartContract: function (fileName, fileHash, address, success, failed) {
         //todo: load smartContract ABI and call addFile function...
-        var fileContract = contract(contractJson);
-        fileContract.setProvider(hdProvider);
-        if (typeof fileContract.currentProvider.sendAsync !== "function") {
-            fileContract.currentProvider.sendAsync = function () {
-                return fileContract.currentProvider.send.apply(fileContract.currentProvider, arguments);
-            };
-        };
-        fileContract.deployed().then(function (instance) { 
-            console.log('address:', address);           
+        fileContract.deployed().then(function (instance) {
+            console.log('address:', address);
             console.log('fileName:', fileName);
-            console.log('fileHash:', fileHash);            
-            var fileNameBytes = Web3.utils.padRight(Web3.utils.fromAscii(fileName));                        
-            console.log(fileNameBytes);
-            var fileHashBytes = Web3.utils.padRight(Web3.utils.fromAscii(fileHash));              
-            console.log(fileHashBytes);
+            console.log('fileHash:', fileHash);
+            var fileNameBytes = Web3.utils.padRight(Web3.utils.fromAscii(fileName));            
+            var fileHashBytes = Web3.utils.padRight(Web3.utils.fromAscii(fileHash));            
             return instance.addFile(fileHashBytes, fileNameBytes, {
                 from: address
             });
-        }).then(function(result){
+        }).then(function (result) {
+            console.log(result);
+            success(result);
+        }).catch(function (err) {
+            console.log(err)
+            failed(err);
+        });
+    },
+
+    getUserFiles: function(req, res) {
+        console.log(req.query.address);
+        self.getFiles(req.query.address, function(e){ res.send(e); }, function(err){ res.send(err); })        
+    },
+    getFiles: function (address, success, failed) {
+        console.log(address);       
+        fileContract.deployed().then(function (instance) {
+            return instance.getAllFiles({
+                from: address
+            });
+        }).then(function (result) {
             console.log(result);
             success(result);
         }).catch(function (err) {
